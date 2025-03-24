@@ -37,9 +37,6 @@ class Interface:
 
         # Partitions for parallel data retrieval; for parallel computing.
         partitions = src.data.partitions.Partitions(data=latest).exc(attributes=self.__attributes)
-        logging.info(partitions)
-        partitions = partitions[:8]
-        logging.info(partitions)
 
         # Retrieving time series points
         src.data.points.Points(period=self.__attributes.get('period')).exc(partitions=partitions)
