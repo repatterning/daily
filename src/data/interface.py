@@ -1,7 +1,7 @@
 """Module interface.py"""
 import logging
 
-import src.data.latest
+import src.data.gauges
 import src.data.partitions
 import src.data.points
 import src.elements.s3_parameters as s3p
@@ -33,7 +33,7 @@ class Interface:
         """
 
         # Latest
-        latest = src.data.latest.Latest(service=self.__service, s3_parameters=self.__s3_parameters).exc()
+        latest = src.data.gauges.Gauges(service=self.__service, s3_parameters=self.__s3_parameters).exc()
 
         # Partitions for parallel data retrieval; for parallel computing.
         partitions = src.data.partitions.Partitions(data=latest).exc(attributes=self.__attributes)
