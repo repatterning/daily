@@ -1,5 +1,4 @@
 """Module interface.py"""
-import datetime
 import logging
 
 import src.data.latest
