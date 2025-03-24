@@ -13,7 +13,7 @@ import src.s3.keys
 
 class Latest:
     """
-
+    Retrieves the catchment & time series codes of the gauges in focus.
     """
 
     def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters):
