@@ -1,4 +1,4 @@
-"""Module latest.py"""
+"""Module gauges.py"""
 import itertools
 import os
 
@@ -11,7 +11,7 @@ import src.elements.service as sr
 import src.s3.keys
 
 
-class Latest:
+class Gauges:
     """
     Retrieves the catchment & time series codes of the gauges in focus.
     """
