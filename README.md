@@ -1,6 +1,6 @@
 <br>
 
-**Daily**
+Daily/Continuous
 
 <br>
 <br>
