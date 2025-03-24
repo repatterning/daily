@@ -1,6 +1,4 @@
 """Module interface.py"""
-import logging
-
 import src.data.gauges
 import src.data.partitions
 import src.data.points
