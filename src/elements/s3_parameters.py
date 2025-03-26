@@ -25,6 +25,9 @@ class S3Parameters(typing.NamedTuple):
     path_internal_references : str
       A root bucket-prefix for references.
 
+    path_internal_artefacts : str
+      A root bucket-prefix for the artefacts of models.
+
     external: str
       An Amazon S3 (Simple Storage Service) bucket.
 
@@ -37,5 +40,6 @@ class S3Parameters(typing.NamedTuple):
     internal: str
     path_internal_data: str
     path_internal_references: str
+    path_internal_artefacts: str
     external: str
     configurations: str
