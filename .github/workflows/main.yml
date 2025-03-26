@@ -132,6 +132,9 @@ jobs:
           printf "\nCoverage tests/functions/"
           printf "\n Upcoming ... pytest --cov-report term-missing  --cov src/elements/ tests/functions/"
           
+          printf "\nCoverage tests/preface/"
+          printf "\n Upcoming ... pytest --cov-report term-missing  --cov src/elements/ tests/preface/"
+          
           printf "\nCoverage tests/s3/"
           printf "\n Upcoming ... pytest --cov-report term-missing  --cov src/references/ tests/s3/"
           
