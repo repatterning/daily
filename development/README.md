@@ -160,17 +160,6 @@ structure: time.struct_time = time.strptime(stamp)
 time.strftime('%Y-%m-%d %H:%M:%S', structure)
 ```
 
-
-<br>
-<br>
-
-## References
-
-* [Epoch Time](https://unixtime.org)
-* [UNIX Time Converters](https://time.is/Unix_time_converter)
-* [Time Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations)
-* [ubuntu man pages](https://manpages.ubuntu.com/manpages/trusty/man1/)
-
 <br>
 <br>
 
