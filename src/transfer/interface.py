@@ -35,7 +35,7 @@ class Interface:
        :return:
        """
 
-        key_name = 'references/metadata.json'
+        key_name = 'data/metadata.json'
 
         buffer = src.s3.unload.Unload(s3_client=self.__service.s3_client).exc(
             bucket_name=self.__s3_parameters.configurations, key_name=key_name)
