@@ -27,7 +27,7 @@ class Interface:
         :return:
         """
 
-        key_name = 'daily/attributes.json'
+        key_name = 'data/daily/attributes.json'
         dictionary = src.s3.configurations.Configurations(
             connector=connector).objects(key_name=key_name)
 
