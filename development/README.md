@@ -2,6 +2,12 @@
 
 ## Development Environment
 
+For a specific set of codes
+
+```shell
+python src/main.py --codes '57322010,57363010'
+```
+
 ### Remote Development
 
 For this Python project/template, the remote development environment requires

@@ -2,7 +2,7 @@
 import logging
 import os
 import sys
-
+import argparse
 import boto3
 
 
@@ -17,7 +17,8 @@ def main():
     logger.info(attributes)
 
     # Steps
-    src.data.interface.Interface(service=service, s3_parameters=s3_parameters, attributes=attributes).exc()
+    src.data.interface.Interface(
+        service=service, s3_parameters=s3_parameters, attributes=attributes).exc(codes=args.codes)
     src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Deleting __pycache__
@@ -43,7 +44,13 @@ if __name__ == '__main__':
     import src.preface.setup
     import src.transfer.interface
     import src.preface.interface
+    import src.specific
 
+    specific = src.specific.Specific()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--codes', type=specific.codes,
+                        help='Expects a string of one or more comma separated gauge time series codes.')
+    args = parser.parse_args()
 
     connector: boto3.session.Session
     s3_parameters: s3p.S3Parameters
