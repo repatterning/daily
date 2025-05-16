@@ -1,6 +1,9 @@
 """Module specific.py"""
 import argparse
 
+import src.functions.cache
+
+
 class Specific:
     """
     Specific
@@ -26,6 +29,7 @@ class Specific:
         try:
             _codes = [int(element) for element in elements]
         except argparse.ArgumentTypeError as err:
+            src.functions.cache.Cache().exc()
             raise err from err
 
         return _codes
