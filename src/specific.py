@@ -26,6 +26,6 @@ class Specific:
         try:
             _codes = [int(element) for element in elements]
         except argparse.ArgumentTypeError as err:
-            raise argparse.ArgumentTypeError('Expecting a string of one or more comma-separated gauge time series codes')
+            raise err from err
 
         return _codes
