@@ -19,5 +19,6 @@ class Config:
         self.warehouse: str = os.path.join(os.getcwd(), 'warehouse')
         self.series_ = os.path.join(self.warehouse, 'data', 'series')
 
-        # Template
+        # Keys
         self.s3_parameters_key = 's3_parameters.yaml'
+        self.attributes_key = 'data/daily/attributes.json'
