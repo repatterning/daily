@@ -28,40 +28,47 @@ class Interface:
         self.__s3_parameters = s3_parameters
         self.__attributes = attributes
 
-    @staticmethod
-    def __filter(blob: pd.DataFrame, codes: list[int]) -> pd.DataFrame:
+    def __filter(self, gauges: pd.DataFrame) -> pd.DataFrame:
         """
 
-        :param blob:
-        :param codes:
+        :param gauges:
         :return:
         """
 
-        states = blob['ts_id'].isin(codes)
-        if sum(states) == 0:
+        codes: list = self.__attributes.get('excerpt')
+
+        # Daily
+        if len(codes) == 0:
+            return gauges
+
+        # Feed
+        catchments = gauges.copy().loc[gauges['ts_id'].isin(codes), 'catchment_id'].unique()
+        if sum(catchments) == 0:
             src.functions.cache.Cache().exc()
             sys.exit('None of the time series codes is valid')
 
-        focus = blob.loc[states, 'ts_id'].unique()
+        _gauges = gauges.copy().loc[gauges['catchment_id'].isin(catchments), :]
+
+        # Logging
+        elements = _gauges['ts_id'].unique()
         logging.info('The feed is requesting emergency intelligence for %s gauges, %s.  '
-                     'Intelligence is possible for %s gauges, %s', len(codes), codes, focus.shape[0], focus)
+                     'Intelligence is possible for %s gauges, %s', len(codes), codes, elements.shape[0], elements)
 
-        return blob.copy().loc[states, :]
+        return _gauges
 
-    def exc(self, codes: list[int] | None):
+    def exc(self):
         """
 
-        :param codes:
         :return:
         """
 
-        # Latest
-        latest = src.data.gauges.Gauges(service=self.__service, s3_parameters=self.__s3_parameters).exc()
-        if codes is not None:
-            latest = self.__filter(blob=latest, codes=codes)
+        # Gauges
+        gauges = src.data.gauges.Gauges(service=self.__service, s3_parameters=self.__s3_parameters).exc()
+        gauges = self.__filter(gauges=gauges.copy())
 
         # Partitions for parallel data retrieval; for parallel computing.
-        partitions = src.data.partitions.Partitions(data=latest).exc(attributes=self.__attributes)
+        partitions = src.data.partitions.Partitions(data=gauges).exc(attributes=self.__attributes)
+        logging.info(partitions)
 
         # Retrieving time series points
         src.data.points.Points(period=self.__attributes.get('period')).exc(partitions=partitions)
