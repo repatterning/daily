@@ -6,7 +6,7 @@ import dask
 import pandas as pd
 
 import config
-import src.elements.partitions as prt
+import src.elements.partitions as pr
 import src.functions.directories
 import src.functions.objects
 import src.functions.streams
@@ -64,7 +64,7 @@ class Points:
         return frame
 
     @dask.delayed
-    def __persist(self, data: pd.DataFrame, partition: prt.Partitions) -> str:
+    def __persist(self, data: pd.DataFrame, partition: pr.Partitions) -> str:
         """
 
         :param data:
@@ -80,7 +80,7 @@ class Points:
 
         return message
 
-    def exc(self, partitions: list[prt.Partitions]):
+    def exc(self, partitions: list[pr.Partitions]):
         """
 
         :param partitions: ts_id, datestr, catchment_size, gauge_datum, on_river

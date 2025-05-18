@@ -4,7 +4,7 @@ import datetime
 import dask
 import pandas as pd
 
-import src.elements.partitions as prt
+import src.elements.partitions as pr
 
 
 class Partitions:
@@ -35,11 +35,11 @@ class Partitions:
 
         data = data.assign(datestr = str(start))
         records: pd.DataFrame = data[self.__fields]
-        objects: pd.Series = records.apply(lambda x: prt.Partitions(**dict(x)), axis=1)
+        objects: pd.Series = records.apply(lambda x: pr.Partitions(**dict(x)), axis=1)
 
         return objects.tolist()
 
-    def exc(self, attributes: dict) -> list[prt.Partitions]:
+    def exc(self, attributes: dict) -> list[pr.Partitions]:
         """
 
         :param attributes:
