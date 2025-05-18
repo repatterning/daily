@@ -18,7 +18,7 @@ def main():
 
     # Steps
     src.data.interface.Interface(
-        service=service, s3_parameters=s3_parameters, attributes=attributes).exc(codes=args.codes)
+        service=service, s3_parameters=s3_parameters, attributes=attributes).exc()
     src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Deleting __pycache__
@@ -56,6 +56,6 @@ if __name__ == '__main__':
     s3_parameters: s3p.S3Parameters
     service: sr.Service
     attributes: dict
-    connector, s3_parameters, service, attributes = src.preface.interface.Interface().exc()
+    connector, s3_parameters, service, attributes = src.preface.interface.Interface().exc(codes=args.codes)
 
     main()
