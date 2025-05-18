@@ -13,7 +13,7 @@ class Specific:
         pass
 
     @staticmethod
-    def codes(value: str=None) -> list[int] | None:
+    def codes(value: str=None) -> list[int]:
         """
 
         :param value:
@@ -21,7 +21,7 @@ class Specific:
         """
 
         if value is None:
-            return None
+            return []
 
         # Split and strip
         elements = [e.strip() for e in value.split(',')]
