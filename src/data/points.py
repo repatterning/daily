@@ -10,7 +10,6 @@ import config
 import src.data.special
 import src.elements.partitions as pr
 import src.functions.directories
-import src.functions.objects
 import src.functions.streams
 
 
@@ -33,7 +32,6 @@ class Points:
         self.__configurations = config.Config()
 
         # An instance for reading & writing JSON (JavaScript Object Notation) objects, CSV, ...
-        self.__objects = src.functions.objects.Objects()
         self.__streams = src.functions.streams.Streams()
         self.__directories = src.functions.directories.Directories()
         self.__special = src.data.special.Special(connector=connector)
