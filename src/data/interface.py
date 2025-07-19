@@ -18,7 +18,8 @@ class Interface:
     Interface
     """
 
-    def __init__(self, connector: boto3.session.Session, service: sr.Service, s3_parameters: s3p.S3Parameters, attributes: dict):
+    def __init__(self, connector: boto3.session.Session, service: sr.Service,
+                 s3_parameters: s3p.S3Parameters, attributes: dict):
         """
 
         :param connector: A boto3 session instance, it retrieves the developer's <default> Amazon
