@@ -36,8 +36,7 @@ class Special:
 
         token_url = 'https://timeseries.sepa.org.uk/KiWebPortal/rest/auth/oidcServer/token'
         access_key = self.__secret.exc(secret_id='HydrographyProject', node='sepa')
-        headers =  {'Authorization':'Bearer ' + access_key}
-
+        headers =  {'Authorization':'Basic ' + access_key}
         response_token= requests.post(token_url, headers = headers, data = 'grant_type=client_credentials')
         access_token = response_token.json()['access_token']
 
@@ -46,7 +45,7 @@ class Special:
     def __get_content(self, url: str) -> str:
         """
 
-        :param url:
+        :param url: A data set's uniform resource locator
         :return:
         """
 
@@ -64,12 +63,13 @@ class Special:
 
         sys.exit(response.status_code)
 
-    def exc(self, url: str):
+    def exc(self, url: str) -> dict | list[dict]:
         """
 
-        :param url:
+        :param url: A data set's uniform resource locator
         :return:
         """
 
         content = self.__get_content(url=url)
-        json.loads(content)
+
+        return json.loads(content)
