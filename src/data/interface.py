@@ -1,8 +1,9 @@
 """Module interface.py"""
 import logging
 import sys
-import pandas as pd
+
 import boto3
+import pandas as pd
 
 import src.data.gauges
 import src.data.partitions
@@ -72,7 +73,6 @@ class Interface:
 
         # Partitions for parallel data retrieval; for parallel computing.
         partitions = src.data.partitions.Partitions(data=gauges).exc(attributes=self.__attributes)
-        logging.info(partitions)
 
         # Retrieving time series points
         src.data.points.Points(connector=self.__connector, period=self.__attributes.get('period')).exc(partitions=partitions)
