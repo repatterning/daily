@@ -28,6 +28,7 @@ class Special:
 
     def __get_headers(self) -> dict:
         """
+        This function sets up an ephemeral data retrieval token dict via a client's key.
 
         :return:
         """
