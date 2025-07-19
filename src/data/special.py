@@ -20,8 +20,6 @@ class Special:
                           Web Services (AWS) profile details, which allows for programmatic interaction with AWS.
         """
 
-        self.__connector = connector
-
         # Hence
         self.__secret = src.functions.secret.Secret(connector=connector)
 
@@ -37,7 +35,7 @@ class Special:
         token_url = 'https://timeseries.sepa.org.uk/KiWebPortal/rest/auth/oidcServer/token'
         access_key = self.__secret.exc(secret_id='HydrographyProject', node='sepa')
         headers =  {'Authorization':'Basic ' + access_key}
-        response_token= requests.post(token_url, headers = headers, data = 'grant_type=client_credentials')
+        response_token= requests.post(token_url, headers = headers, data = 'grant_type=client_credentials', timeout=600)
         access_token = response_token.json()['access_token']
 
         return {'Authorization':'Bearer ' + access_token}
