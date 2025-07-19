@@ -1,3 +1,4 @@
+"""Module special.py"""
 import json
 import sys
 
@@ -8,6 +9,9 @@ import src.functions.secret
 
 
 class Special:
+    """
+    Special
+    """
 
     def __init__(self, connector: boto3.session.Session):
         """
@@ -25,6 +29,10 @@ class Special:
         self.__headers = self.__get_headers()
 
     def __get_headers(self) -> dict:
+        """
+
+        :return:
+        """
 
         token_url = 'https://timeseries.sepa.org.uk/KiWebPortal/rest/auth/oidcServer/token'
         access_key = self.__secret.exc(secret_id='HydrographyProject', node='sepa')
@@ -36,6 +44,11 @@ class Special:
         return {'Authorization':'Bearer ' + access_token}
 
     def __get_content(self, url: str) -> str:
+        """
+
+        :param url:
+        :return:
+        """
 
         try:
             response = requests.get(url=url, headers=self.__headers, timeout=600)
@@ -51,10 +64,12 @@ class Special:
 
         sys.exit(response.status_code)
 
-
     def exc(self, url: str):
+        """
 
+        :param url:
+        :return:
+        """
 
         content = self.__get_content(url=url)
         json.loads(content)
-
