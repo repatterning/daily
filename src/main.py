@@ -40,9 +40,8 @@ if __name__ == '__main__':
     import src.elements.s3_parameters as s3p
     import src.elements.service as sr
     import src.functions.cache
-    import src.preface.setup
-    import src.transfer.interface
     import src.preface.interface
+    import src.transfer.interface
     import src.specific
 
     specific = src.specific.Specific()
