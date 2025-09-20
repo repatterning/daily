@@ -36,8 +36,9 @@ class Interface:
             connector=connector).objects(key_name=key_name)
 
         value = datetime.datetime.now()
-        dictionary['starting'] = f'{value.year}-01-01'
-        dictionary['ending'] = f'{value.year}-01-01'
+        yesterday = value - datetime.timedelta(days=1)
+        dictionary['starting'] = yesterday.strftime(format='%Y-%m-%d')
+        dictionary['ending'] = value.strftime(format='%Y-%m-%d')
 
         return dictionary
 
