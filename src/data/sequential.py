@@ -17,10 +17,11 @@ class Sequential:
     def __init__(self, data: dict | list[dict], s3_parameters: s3p.S3Parameters, settings: dict, codes: dict):
         """
 
-        :param data:
-        :param s3_parameters:
-        :param settings:
-        :param codes:
+        :param data: Each dictionary data encodes the data of a gauge.
+        :param s3_parameters: The overarching S3 parameters settings of this project, e.g., region code
+                              name, buckets, etc.
+        :param settings: starting, ending, period, year
+        :param codes: key -> ts_id, value -> catchment_id
         """
 
         self.__data = data
@@ -39,7 +40,7 @@ class Sequential:
     def __get_series(self, index: int):
         """
 
-        :param index:
+        :param index: For self.__data
         :return:
         """
 
@@ -58,8 +59,8 @@ class Sequential:
         """
         Upcoming: A call to an updating class
 
-        :param index:
-        :param frame:
+        :param index: The index such that `frame` &Rarr; `self.__data[index]`
+        :param frame: The data of a gauge.
         :return:
         """
 
