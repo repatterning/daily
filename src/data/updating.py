@@ -12,15 +12,15 @@ class Updating:
     """
 
 
-    def __init__(self, s3_parameters: s3p.S3Parameters, attributes: dict):
+    def __init__(self, s3_parameters: s3p.S3Parameters, settings: dict):
         """
 
         :param s3_parameters:
-        :param attributes:
+        :param settings:
         """
 
         self.__s3_parameters = s3_parameters
-        self.__attributes = attributes
+        self.__settings = settings
 
         # Instances
         self.__streams = src.functions.streams.Streams()
@@ -49,7 +49,7 @@ class Updating:
         :return:
         """
 
-        date = self.__attributes.get('year') + '-01-01'
+        date = self.__settings.get('year') + '-01-01'
         uri = (f's3://{self.__s3_parameters.internal}/{self.__s3_parameters.path_internal_data}series/'
                f'{catchment_id}/{ts_id}/{date}.csv')
 
