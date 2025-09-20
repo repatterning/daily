@@ -19,13 +19,15 @@ class Gauges:
     def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters):
         """
 
-        :param service:
-        :param s3_parameters:
+        :param service: A suite of services for interacting with Amazon Web Services.
+        :param s3_parameters: The overarching S3 parameters settings of this project, e.g., region code
+                              name, buckets, etc.
         """
 
         self.__service = service
         self.__s3_parameters = s3_parameters
 
+        # Instances
         self.__objects = src.s3.keys.Keys(service=self.__service, bucket_name=self.__s3_parameters.internal)
 
     @dask.delayed
