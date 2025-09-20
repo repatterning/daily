@@ -58,7 +58,7 @@ class Interface:
         # Logic
         stamp = datetime.datetime.now()
         yesterday = stamp - datetime.timedelta(days=1)
-        atypical = src.data.atypical.Atypical(s3_parameters=self.__s3_parameters, codes=codes)
+        atypical = src.data.atypical.Atypical(connector=self.__connector, s3_parameters=self.__s3_parameters, codes=codes)
         if (stamp.month == 1) & (stamp.day == 1):
             settings = {'starting': f'{stamp.year}-01-01',
                         'period': 'P2D', 'year': stamp.year}
