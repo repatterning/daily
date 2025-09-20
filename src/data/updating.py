@@ -14,8 +14,9 @@ class Updating:
     def __init__(self, s3_parameters: s3p.S3Parameters, settings: dict):
         """
 
-        :param s3_parameters:
-        :param settings:
+        :param s3_parameters: The overarching S3 parameters settings of this project, e.g., region code
+                              name, buckets, etc.
+        :param settings: starting, ending, period, year
         """
 
         self.__s3_parameters = s3_parameters
@@ -27,8 +28,8 @@ class Updating:
     def __update(self, uri: str, frame: pd.DataFrame) -> str:
         """
 
-        :param uri:
-        :param frame:
+        :param uri: Storage path.
+        :param frame: The data of a gauge.
         :return:
         """
 
@@ -45,9 +46,9 @@ class Updating:
     def exc(self, frame: pd.DataFrame, ts_id: int, catchment_id: int) -> str:
         """
 
-        :param frame:
-        :param ts_id:
-        :param catchment_id:
+        :param frame: The data of a gauge.
+        :param ts_id: A gauge's time series code.
+        :param catchment_id: The gauge's catchment code.
         :return:
         """
 
