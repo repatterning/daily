@@ -14,22 +14,20 @@ class Sequential:
 
     """
 
-    def __init__(self, s3_parameters: s3p.S3Parameters, attributes: dict, codes: dict):
+    def __init__(self, data: dict | list[dict], s3_parameters: s3p.S3Parameters, settings: dict, codes: dict):
         """
 
+        :param data:
         :param s3_parameters:
-        :param attributes:
+        :param settings:
         :param codes:
         """
 
+        self.__data = data
         self.__s3_parameters = s3_parameters
 
-        # The latest data: each dictionary is the latest data of a gauge.
-        self.__data: list[dict] = src.data.api.API().continuous(
-            starting=attributes.get('starting'), period=attributes.get('period'))
-
         # An instance for updating
-        self.__updating = src.data.updating.Updating(s3_parameters=s3_parameters, attributes=attributes)
+        self.__updating = src.data.updating.Updating(s3_parameters=s3_parameters, settings=settings)
 
         # key: ts_id, value: catchment_id
         self.__codes = codes
