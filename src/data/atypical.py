@@ -1,5 +1,6 @@
 """Module atypical.py"""
 import datetime
+
 import boto3
 
 import src.data.api
