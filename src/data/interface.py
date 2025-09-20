@@ -1,15 +1,17 @@
 """Module interface.py"""
 import logging
+import collections
 import sys
+import datetime
 
 import boto3
 import pandas as pd
 
 import src.data.gauges
-import src.data.partitions
-import src.data.points
+
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
+import src.elements.partitions as pr
 import src.functions.cache
 
 
@@ -73,8 +75,15 @@ class Interface:
         gauges = self.__filter(gauges=gauges.copy())
 
         # Partitions for parallel data retrieval; for parallel computing.
-        partitions = src.data.partitions.Partitions(data=gauges).exc(attributes=self.__attributes)
-        logging.info(partitions)
+        gauges_: pd.DataFrame = gauges.copy()[['catchment_id', 'ts_id']]
+        objects: pd.Series = gauges_.apply(lambda x: pr.Partitions(**dict(x)), axis=1)
+        partitions: list[pr.Partitions] = objects.tolist()
 
-        # Retrieving time series points
-        # src.data.points.Points(connector=self.__connector, period=self.__attributes.get('period')).exc(partitions=partitions)
+        # Logic
+        stamp = datetime.datetime.now()
+        if (stamp.month == 1) & (stamp.day == 1):
+            logging.info('Split arithmetic')
+        else:
+            logging.info(list(map(lambda x: x.ts_id, partitions)))
+            listings = [{int(p.ts_id): int(p.catchment_id)} for p in partitions]
+            logging.info(dict(collections.ChainMap(*listings)))
