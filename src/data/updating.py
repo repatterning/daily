@@ -11,7 +11,6 @@ class Updating:
 
     """
 
-
     def __init__(self, s3_parameters: s3p.S3Parameters, settings: dict):
         """
 
@@ -33,8 +32,11 @@ class Updating:
         :return:
         """
 
+        # If a file of interest does not exist, an empty data frame is returned
         text = txa.TextAttributes(uri=uri, header=0)
         original = self.__streams.read(text=text)
+
+        # Concatenating
         instances = pd.concat([original, frame], axis=0, ignore_index=True)
         instances.drop_duplicates(inplace=True)
 
