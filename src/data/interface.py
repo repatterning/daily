@@ -1,7 +1,5 @@
 """Module interface.py"""
 import logging
-import collections
-import sys
 import datetime
 
 import boto3
@@ -11,8 +9,9 @@ import src.data.gauges
 
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
-import src.elements.partitions as pr
 import src.functions.cache
+import src.data.filtering
+import src.data.atypical
 
 
 class Interface:
@@ -36,54 +35,38 @@ class Interface:
         self.__s3_parameters = s3_parameters
         self.__attributes = attributes
 
-    def __filter(self, gauges: pd.DataFrame) -> pd.DataFrame:
-        """
-
-        :param gauges:
-        :return:
-        """
-
-        codes: list = self.__attributes.get('excerpt')
-
-        # Daily
-        if len(codes) == 0:
-            return gauges
-
-        # Feed
-        catchments = gauges.copy().loc[gauges['ts_id'].isin(codes), 'catchment_id'].unique()
-        if sum(catchments) == 0:
-            src.functions.cache.Cache().exc()
-            sys.exit('None of the time series codes is valid')
-
-        _gauges = gauges.copy().loc[gauges['catchment_id'].isin(catchments), :]
-
-        # Logging
-        elements = _gauges['ts_id'].unique()
-        logging.info('The feed is requesting emergency intelligence for %s gauges, %s.  '
-                     'Intelligence is possible for %s gauges, %s', len(codes), codes, elements.shape[0], elements)
-
-        return _gauges
+        # Instances
+        self.__filtering = src.data.filtering.Filtering()
 
     def exc(self):
         """
+        logging.info(list(map(lambda x: x.ts_id, partitions)))
 
         :return:
         """
 
         # Gauges
         gauges = src.data.gauges.Gauges(service=self.__service, s3_parameters=self.__s3_parameters).exc()
-        gauges = self.__filter(gauges=gauges.copy())
+        codes = self.__attributes.get('excerpt')
+        gauges = gauges if len(codes) == 0 else self.__filtering.exc(gauges=gauges, attributes=self.__attributes)
 
         # Partitions for parallel data retrieval; for parallel computing.
         gauges_: pd.DataFrame = gauges.copy()[['catchment_id', 'ts_id']]
-        objects: pd.Series = gauges_.apply(lambda x: pr.Partitions(**dict(x)), axis=1)
-        partitions: list[pr.Partitions] = objects.tolist()
+        codes = gauges_.set_index(keys='ts_id', drop=True).to_dict(orient='dict')['catchment_id']
+        logging.info(codes)
 
         # Logic
         stamp = datetime.datetime.now()
+        yesterday = stamp - datetime.timedelta(days=1)
+        atypical = src.data.atypical.Atypical(s3_parameters=self.__s3_parameters, codes=codes)
         if (stamp.month == 1) & (stamp.day == 1):
-            logging.info('Split arithmetic')
+            settings = {'starting': f'{stamp.year}-01-01',
+                        'period': 'P2D', 'year': stamp.year}
+            atypical.continuous(settings=settings)
+            settings = {'starting': yesterday.strftime('%Y-%m-%d'),
+                        'ending': stamp.strftime('%Y-%m-%d'), 'year': yesterday.year}
+            atypical.limiting(settings=settings)
         else:
-            logging.info(list(map(lambda x: x.ts_id, partitions)))
-            listings = [{int(p.ts_id): int(p.catchment_id)} for p in partitions]
-            logging.info(dict(collections.ChainMap(*listings)))
+            settings = {'starting': yesterday.strftime(format='%Y-%m-%d'),
+                        'period': 'P2D', 'year': stamp.year}
+            atypical.continuous(settings=settings)
