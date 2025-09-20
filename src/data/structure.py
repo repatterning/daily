@@ -1,4 +1,4 @@
-"""Module atypical.py"""
+"""Module structure.py"""
 import datetime
 
 import boto3
@@ -8,7 +8,7 @@ import src.data.sequential
 import src.elements.s3_parameters as s3p
 
 
-class Atypical:
+class Structure:
     """
     Addresses the straddling of years
     """
@@ -18,8 +18,9 @@ class Atypical:
 
         :param connector: A boto3 session instance, it retrieves the developer's <default> Amazon
                           Web Services (AWS) profile details, which allows for programmatic interaction with AWS.
-        :param s3_parameters:
-        :param codes:
+        :param s3_parameters: The overarching S3 parameters settings of this project, e.g., region code
+                              name, buckets, etc.
+        :param codes: key -> ts_id, value -> catchment_id
         """
 
         self.__s3_parameters = s3_parameters
@@ -31,7 +32,7 @@ class Atypical:
     def continuous(self, settings: dict):
         """
 
-        :param settings:
+        :param settings: starting, ending, period, year
         :return:
         """
 
@@ -46,7 +47,7 @@ class Atypical:
     def limiting(self, settings: dict):
         """
 
-        :param settings:
+        :param settings: starting, ending, period, year
         :return:
         """
 
