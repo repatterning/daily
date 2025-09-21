@@ -1,13 +1,12 @@
 """Module interface.py"""
+import datetime
 import logging
-import sys
 
 import boto3
-import pandas as pd
 
+import src.data.filtering
 import src.data.gauges
-import src.data.partitions
-import src.data.points
+import src.data.structure
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.functions.cache
@@ -24,8 +23,9 @@ class Interface:
 
         :param connector: A boto3 session instance, it retrieves the developer's <default> Amazon
                           Web Services (AWS) profile details, which allows for programmatic interaction with AWS.
-        :param service:
-        :param s3_parameters:
+        :param service: A suite of services for interacting with Amazon Web Services.
+        :param s3_parameters: The overarching S3 parameters settings of this project, e.g., region code
+                              name, buckets, etc.
         :param attributes: A set of data acquisition attributes.
         """
 
@@ -34,46 +34,31 @@ class Interface:
         self.__s3_parameters = s3_parameters
         self.__attributes = attributes
 
-    def __filter(self, gauges: pd.DataFrame) -> pd.DataFrame:
-        """
-
-        :param gauges:
-        :return:
-        """
-
-        codes: list = self.__attributes.get('excerpt')
-
-        # Daily
-        if len(codes) == 0:
-            return gauges
-
-        # Feed
-        catchments = gauges.copy().loc[gauges['ts_id'].isin(codes), 'catchment_id'].unique()
-        if sum(catchments) == 0:
-            src.functions.cache.Cache().exc()
-            sys.exit('None of the time series codes is valid')
-
-        _gauges = gauges.copy().loc[gauges['catchment_id'].isin(catchments), :]
-
-        # Logging
-        elements = _gauges['ts_id'].unique()
-        logging.info('The feed is requesting emergency intelligence for %s gauges, %s.  '
-                     'Intelligence is possible for %s gauges, %s', len(codes), codes, elements.shape[0], elements)
-
-        return _gauges
-
     def exc(self):
         """
+        logging.info(list(map(lambda x: x.ts_id, partitions)))
 
         :return:
         """
 
         # Gauges
-        gauges = src.data.gauges.Gauges(service=self.__service, s3_parameters=self.__s3_parameters).exc()
-        gauges = self.__filter(gauges=gauges.copy())
+        codes = src.data.gauges.Gauges(
+            service=self.__service, s3_parameters=self.__s3_parameters, attributes=self.__attributes).exc()
 
-        # Partitions for parallel data retrieval; for parallel computing.
-        partitions = src.data.partitions.Partitions(data=gauges).exc(attributes=self.__attributes)
-
-        # Retrieving time series points
-        src.data.points.Points(connector=self.__connector, period=self.__attributes.get('period')).exc(partitions=partitions)
+        # Logic
+        stamp = datetime.datetime.now()
+        yesterday = stamp - datetime.timedelta(days=1)
+        structure = src.data.structure.Structure(connector=self.__connector, s3_parameters=self.__s3_parameters, codes=codes)
+        if (stamp.month == 1) & (stamp.day == 1):
+            logging.info('Straddling')
+            settings = {'starting': f'{stamp.year}-01-01',
+                        'period': 'P2D', 'year': str(stamp.year)}
+            structure.continuous(settings=settings)
+            settings = {'starting': yesterday.strftime('%Y-%m-%d'),
+                        'ending': stamp.strftime('%Y-%m-%d'), 'year': str(yesterday.year)}
+            structure.limiting(settings=settings)
+        else:
+            logging.info('Single')
+            settings = {'starting': yesterday.strftime(format='%Y-%m-%d'),
+                        'period': 'P2D', 'year': str(stamp.year)}
+            structure.continuous(settings=settings)

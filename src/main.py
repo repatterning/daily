@@ -18,6 +18,8 @@ def main():
     # Steps
     src.data.interface.Interface(
         connector=connector, service=service, s3_parameters=s3_parameters, attributes=attributes).exc()
+
+    # Transfer
     src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Deleting __pycache__

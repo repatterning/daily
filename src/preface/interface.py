@@ -1,6 +1,5 @@
 """Module interface.py"""
 import typing
-import datetime
 
 import boto3
 
@@ -35,15 +34,12 @@ class Interface:
         dictionary = src.s3.configurations.Configurations(
             connector=connector).objects(key_name=key_name)
 
-        value = datetime.datetime.now()
-        dictionary['starting'] = f'{value.year}-01-01'
-        dictionary['ending'] = f'{value.year}-01-01'
-
         return dictionary
 
     def exc(self, codes: list[int]) -> typing.Tuple[boto3.session.Session, s3p.S3Parameters, sr.Service, dict]:
         """
 
+        :param codes: time series codes, i.e., ts_id
         :return:
         """
 
