@@ -1,17 +1,15 @@
 """Module interface.py"""
-import logging
 import datetime
+import logging
 
 import boto3
-import pandas as pd
 
+import src.data.filtering
 import src.data.gauges
-
+import src.data.structure
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.functions.cache
-import src.data.filtering
-import src.data.structure
 
 
 class Interface:
@@ -36,9 +34,6 @@ class Interface:
         self.__s3_parameters = s3_parameters
         self.__attributes = attributes
 
-        # Instances
-        self.__filtering = src.data.filtering.Filtering()
-
     def exc(self):
         """
         logging.info(list(map(lambda x: x.ts_id, partitions)))
@@ -47,14 +42,8 @@ class Interface:
         """
 
         # Gauges
-        gauges = src.data.gauges.Gauges(service=self.__service, s3_parameters=self.__s3_parameters).exc()
-        codes = self.__attributes.get('excerpt')
-        gauges = gauges if len(codes) == 0 else self.__filtering.exc(gauges=gauges, attributes=self.__attributes)
-
-        # Partitions for parallel data retrieval; for parallel computing.
-        gauges_: pd.DataFrame = gauges.copy()[['catchment_id', 'ts_id']]
-        codes = gauges_.set_index(keys='ts_id', drop=True).to_dict(orient='dict')['catchment_id']
-        logging.info(codes)
+        codes = src.data.gauges.Gauges(
+            service=self.__service, s3_parameters=self.__s3_parameters, attributes=self.__attributes).exc()
 
         # Logic
         stamp = datetime.datetime.now()
