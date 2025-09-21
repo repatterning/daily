@@ -63,13 +63,13 @@ class Interface:
         if (stamp.month == 1) & (stamp.day == 1):
             logging.info('Straddling')
             settings = {'starting': f'{stamp.year}-01-01',
-                        'period': 'P2D', 'year': stamp.year}
+                        'period': 'P2D', 'year': str(stamp.year)}
             structure.continuous(settings=settings)
             settings = {'starting': yesterday.strftime('%Y-%m-%d'),
-                        'ending': stamp.strftime('%Y-%m-%d'), 'year': yesterday.year}
+                        'ending': stamp.strftime('%Y-%m-%d'), 'year': str(yesterday.year)}
             structure.limiting(settings=settings)
         else:
             logging.info('Single')
             settings = {'starting': yesterday.strftime(format='%Y-%m-%d'),
-                        'period': 'P2D', 'year': stamp.year}
+                        'period': 'P2D', 'year': str(stamp.year)}
             structure.continuous(settings=settings)
