@@ -1,6 +1,4 @@
 """Module structure.py"""
-import datetime
-
 import boto3
 
 import src.data.api
