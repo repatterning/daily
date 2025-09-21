@@ -20,7 +20,7 @@ def main():
         connector=connector, service=service, s3_parameters=s3_parameters, attributes=attributes).exc()
 
     # Transfer
-    # src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
+    src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Deleting __pycache__
     src.functions.cache.Cache().exc()
