@@ -11,7 +11,7 @@ import src.elements.s3_parameters as s3p
 
 class Sequential:
     """
-
+    Sequential
     """
 
     def __init__(self, data: dict | list[dict], s3_parameters: s3p.S3Parameters, settings: dict, codes: dict):
@@ -25,7 +25,6 @@ class Sequential:
         """
 
         self.__data = data
-        self.__s3_parameters = s3_parameters
 
         # An instance for updating
         self.__updating = src.data.updating.Updating(s3_parameters=s3_parameters, settings=settings)
