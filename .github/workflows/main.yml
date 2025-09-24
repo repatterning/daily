@@ -1,4 +1,4 @@
-name: 'Hydrography: Daily Acquisition of River Level Values'
+name: 'Hydrography: Daily & Impromptu Acquisition of River Level Values'
 
 on: [push]
 
